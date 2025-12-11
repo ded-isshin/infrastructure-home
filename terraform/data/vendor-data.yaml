@@ -1,0 +1,22 @@
+#cloud-config
+manage_etc_hosts: true
+ssh_pwauth: false
+disable_root: true
+
+package_update: true
+packages:
+  - qemu-guest-agent
+  - ca-certificates
+  - wget
+  - nano
+  - htop
+  - curl
+
+bootcmd:
+  - systemctl start systemd-networkd-wait-online.service
+
+runcmd:
+  - systemctl enable --now qemu-guest-agent
+  - systemctl start qemu-guest-agent
+
+final_message: "⟨cloud-init⟩ VM initialization completed."
