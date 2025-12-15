@@ -64,13 +64,13 @@ locals {
     }
   }
 
-  dns_zone = "local."
+  dns_zone = "home.arpa."
   dns_type = "A"
   dns_ttl  = 300
   dns_zones = {
-    "local." = {
+    "home.arpa." = {
       kind        = "Native"
-      nameservers = ["dns-powerdns-prod-01.local."]
+      nameservers = ["dns-powerdns-prod-01.home.arpa."]
     }
   }
 }
