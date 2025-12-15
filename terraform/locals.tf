@@ -50,5 +50,27 @@ locals {
 
   # https://gitlab.archlinux.org/archlinux/infrastructure/-/blob/master/tf-stage1/archlinux.tf?ref_type=heads#L80
   machines = {
+    "dns-powerdns-prod-01" = {
+      tags                   = ["terraform", "dns"]
+      started                = true
+      protection             = true
+      instance_type_provider = "aws"
+      instance_type          = "c5.large"
+      disk_import_from       = proxmox_virtual_environment_download_file.images["release_20251123_rocky_9_qcow2"].id
+      ip_config_ipv4_address = "192.168.0.20/24"
+      ip_config_ipv4_gateway = "192.168.0.1"
+
+      extra_disks = []
     }
+  }
+
+  dns_zone = "local."
+  dns_type = "A"
+  dns_ttl  = 300
+  dns_zones = {
+    "local." = {
+      kind        = "Native"
+      nameservers = ["dns-powerdns-prod-01.local."]
+    }
+  }
 }

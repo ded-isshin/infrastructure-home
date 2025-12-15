@@ -1,0 +1,33 @@
+# Group vars for PowerDNS Server (SQLite backend)
+
+# Install PowerDNS from the official repository (Rocky/RHEL supported)
+pdns_install_repo: "{{ pdns_auth_powerdns_repo_50 }}"
+
+# SQLite backend configuration
+pdns_sqlite_db_path: "/var/lib/pdns/pdns.sqlite3"
+pdns_sqlite_databases_locations:
+  - "{{ pdns_sqlite_db_path }}"
+
+pdns_backends:
+  gsqlite3:
+    database: "{{ pdns_sqlite_db_path }}"
+
+# PowerDNS configuration (rendered to pdns.conf)
+# API key used for authenticating to the PowerDNS HTTP API (e.g. Terraform provider).
+pdns_api_key: "{{ vault_pdns_api_key }}"
+pdns_webserver_allow_from: "127.0.0.1,192.168.0.0/24"
+
+pdns_config:
+  primary: true
+  secondary: false
+  local-address: "{{ ansible_default_ipv4.address }}"
+  local-port: 53
+
+  api: true
+  api-key: "{{ pdns_api_key }}"
+
+  webserver: true
+  # Expose API to the LAN so Terraform (e.g. 192.168.0.10) can reach it.
+  webserver-address: "{{ ansible_default_ipv4.address }}"
+  webserver-port: 8081
+  webserver-allow-from: "{{ pdns_webserver_allow_from }}"

@@ -1,0 +1,16 @@
+---
+collections:
+  - name: ansible.posix
+    version: 2.1.0
+
+roles:
+  - name: linux-system-roles.storage
+    version: 1.19.1
+  - name: cloudalchemy.coredns
+    version: 2.0.0
+  - name: igor_nikiforov.etcd
+    version: v1.0.0
+  - name: romeroalx.pdns-ansible
+    src: ssh://git@github.com/romeroalx/pdns-ansible.git
+    scm: git
+    version: master

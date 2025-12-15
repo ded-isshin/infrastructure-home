@@ -1,0 +1,10 @@
+- name: Install PowerDNS Authoritative Server with SQLite backend
+  hosts: group_tag_dns
+  vars_files:
+    - ../vault.yml
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  roles:
+    - role: romeroalx.pdns-ansible # The role https://github.com/PowerDNS/pdns-ansible is not updating
+      tags: [pdns]

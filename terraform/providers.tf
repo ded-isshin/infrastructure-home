@@ -9,3 +9,8 @@ provider "proxmox" {
     private_key = file("~/.ssh/id_rsa")
   }
 }
+
+provider "powerdns" {
+  # Check PDNS_API_KEY env
+  server_url = "http://dns-powerdns-prod-01.local:8081/"
+}

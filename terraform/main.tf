@@ -119,9 +119,13 @@ resource "proxmox_virtual_environment_vm" "machines" {
 
   initialization {
     datastore_id = "local-zfs"
+    dns {
+      domain = "local"
+    }
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = each.value.ip_config_ipv4_address
+        gateway = try(each.value.ip_config_ipv4_gateway, null)
       }
     }
     vendor_data_file_id = proxmox_virtual_environment_file.cloud_init_vendor_data.id
@@ -140,4 +144,31 @@ resource "proxmox_virtual_environment_vm" "machines" {
   }
 
   delete_unreferenced_disks_on_destroy = false
+}
+
+#
+# DNS zones and record for PowerDNS block
+#
+
+resource "powerdns_zone" "zones" {
+  for_each = local.dns_zones
+
+  name        = each.key
+  kind        = each.value.kind
+  nameservers = each.value.nameservers
+}
+
+resource "powerdns_record" "machines_a_records" {
+  for_each = local.machines
+
+  zone = local.dns_zone
+  name = "${each.key}.${local.dns_zone}"
+  type = local.dns_type
+  ttl  = local.dns_ttl
+
+  records = [
+  proxmox_virtual_environment_vm.machines[each.key].ipv4_addresses[
+    index(proxmox_virtual_environment_vm.machines[each.key].network_interface_names, "eth0")
+  ][0]
+  ]
 }
