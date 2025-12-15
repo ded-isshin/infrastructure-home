@@ -1,0 +1,28 @@
+- name: Install CoreDNS with etcd cluster as backend
+  hosts: group_tag_dns
+  become: true
+  gather_facts: true
+  # serial: 1
+  any_errors_fatal: true
+  pre_tasks:
+    - name: Ensure etcd group exists (needed for mount ownership)
+      ansible.builtin.group:
+        name: "{{ etcd_group | default('etcd') }}"
+        state: present
+      tags: [storage, etcd]
+
+    - name: Ensure etcd user exists (needed for mount ownership)
+      ansible.builtin.user:
+        name: "{{ etcd_user | default('etcd') }}"
+        group: "{{ etcd_group | default('etcd') }}"
+        home: /bin/false
+        create_home: false
+        state: present
+      tags: [storage, etcd]
+  roles:
+    - role: linux-system-roles.storage
+      tags: [storage]
+    - role: igor_nikiforov.etcd
+      tags: [etcd]
+    - role: cloudalchemy.coredns
+      tags: [coredns]
