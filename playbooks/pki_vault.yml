@@ -1,0 +1,40 @@
+- name: Install PKI Vault with RAFT backend
+  hosts: group_tag_pki
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+    - name: Ensure vault group exists (needed for mount ownership)
+      ansible.builtin.group:
+        name: "{{ vault_group | default('vault') }}"
+        state: present
+      tags: [storage, vault]
+
+    - name: Ensure vault user exists (needed for mount ownership)
+      ansible.builtin.user:
+        name: "{{ vault_user | default('vault') }}"
+        group: "{{ vault_group | default('vault') }}"
+        home: /bin/false
+        create_home: false
+        state: present
+      tags: [storage, vault]
+  roles:
+    - role: robertdebock.bootstrap
+      tags: [vault]
+    - role: robertdebock.core_dependencies
+      tags: [vault]
+    - role: linux-system-roles.storage
+      tags: [storage]
+    - role: robertdebock.hashicorp
+      tags: [vault]
+    - role: robertdebock.vault_configuration
+      tags: [vault]
+
+- name: Initialize and unseal PKI Vault (unseal keys -> ansible vault)
+  hosts: group_tag_pki
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  roles:
+    - role: robertdebock.vault_initialize
+      tags: [vault]
