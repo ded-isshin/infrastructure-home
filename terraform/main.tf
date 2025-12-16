@@ -120,7 +120,7 @@ resource "proxmox_virtual_environment_vm" "machines" {
   initialization {
     datastore_id = "local-zfs"
     dns {
-      domain = "local"
+      domain = "home.arpa"
     }
     ip_config {
       ipv4 {

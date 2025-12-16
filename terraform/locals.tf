@@ -62,6 +62,26 @@ locals {
 
       extra_disks = []
     }
+    "pki-vault-prod-01" = {
+      tags                   = ["terraform", "pki", "vault"]
+      started                = true
+      protection             = false
+      instance_type_provider = "aws"
+      instance_type          = "c5.xlarge"
+      disk_import_from       = proxmox_virtual_environment_download_file.images["release_20251123_rocky_9_qcow2"].id
+      ip_config_ipv4_address = "192.168.0.30/24"
+      ip_config_ipv4_gateway = "192.168.0.1"
+
+      extra_disks = [
+        {
+          datastore_id = "local-zfs"
+          interface    = "scsi1"
+          size         = 50
+          iothread     = true
+          discard      = "on"
+        }
+      ]
+    }
   }
 
   dns_zone = "home.arpa."
