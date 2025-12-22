@@ -1,0 +1,9 @@
+#
+# Ansible managed
+#
+
+interface: {{ ansible_default_ipv4.address }}
+master_id: {{ inventory_hostname }}
+ping_on_rotate: True
+master_stats: True
+log_level: "info"

@@ -46,7 +46,24 @@ locals {
       checksum           = "15d81d3434b298142b2fdd8fb54aef2662684db5c082cc191c3c79762ed6360c"
       checksum_algorithm = "sha256"
     }
+
+    # release_20251215_opensuse_tumbleweed_qcow2 = {
+    #   url                = "https://ftp.gwdg.de/pub/opensuse/tumbleweed/appliances/openSUSE-Tumbleweed-Minimal-VM.x86_64-1.0.0-Cloud-Snapshot20251215.qcow2"
+    #   file_name          = "opensuse-tumbleweed-cloud-amd64-20251215.qcow2"
+    #   checksum           = "52ba8a27a5c76827e2c7f6f79ac2faab779f64c7b1803bb4b8e11e86207477d6"
+    #   checksum_algorithm = "sha256"
+    # }
   }
+
+  # local_images = {
+  #   # https://www.suse.com/download/suse-manager/
+  #   suse_mlms_510_server_qcow2 = {
+  #     path                = "/tmp/SUSE-Multi-Linux-Manager-Server.x86_64-5.1.0-Qcow-GM.qcow2"
+  #     file_name          = "suse-mlms-amd64-510.qcow2"
+  #     checksum           = "0aac6edad45594ab214afa45ffbfef6efa3e5b4abd9313f8d0dfbe670a5b74df"
+  #     checksum_algorithm = "sha256"
+  #   }
+  # }
 
   # https://gitlab.archlinux.org/archlinux/infrastructure/-/blob/master/tf-stage1/archlinux.tf?ref_type=heads#L80
   machines = {
@@ -81,6 +98,19 @@ locals {
           discard      = "on"
         }
       ]
+    }
+    "mgmt-salt-prod-01" = {
+      tags                   = ["terraform", "mgmt", "salt"]
+      started                = true
+      protection             = false
+      instance_type_provider = "aws"
+      instance_type          = "c5.xlarge"
+      disk_import_from       = proxmox_virtual_environment_download_file.images["release_20251123_rocky_9_qcow2"].id
+      ip_config_ipv4_address = "192.168.0.35/24"
+      ip_config_ipv4_gateway = "192.168.0.1"
+      root_disk_size_gb      = 60
+
+      extra_disks = []
     }
   }
 

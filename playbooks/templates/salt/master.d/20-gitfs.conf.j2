@@ -1,0 +1,19 @@
+#
+# Ansible managed
+#
+
+gitfs_provider: {{ salt_gitfs_provider | default("gitpython") }}
+
+fileserver_backend:
+  - roots
+  - git
+
+gitfs_remotes:
+  - {{ salt_git_repo_url }}:
+      - base: {{ salt_git_branch | default("main") }}
+      - root: {{ salt_gitfs_root | default("salt") }}
+
+ext_pillar:
+  - git:
+      - {{ salt_git_branch | default("main") }} {{ salt_git_repo_url }}:
+          - root: {{ salt_git_pillar_root | default("pillar") }}

@@ -1,0 +1,87 @@
+admin:
+  packages:
+    rocky9:
+      - vim-enhanced
+      - nano
+      - wget
+      - jq
+      - unzip
+      - tar
+      - rsync
+      - bash-completion
+      - lsof
+      - tcpdump
+      - traceroute
+      - mtr
+      - bind-utils
+      - net-tools
+      - htop
+      - tmux
+    debian12:
+      - vim
+      - nano
+      - wget
+      - jq
+      - unzip
+      - tar
+      - rsync
+      - bash-completion
+      - lsof
+      - tcpdump
+      - traceroute
+      - mtr-tiny
+      - dnsutils
+      - net-tools
+      - htop
+      - tmux
+    debian13:
+      - vim
+      - nano
+      - wget
+      - jq
+      - unzip
+      - tar
+      - rsync
+      - bash-completion
+      - lsof
+      - tcpdump
+      - traceroute
+      - mtr-tiny
+      - dnsutils
+      - net-tools
+      - htop
+      - tmux
+    ubuntu22:
+      - vim
+      - nano
+      - wget
+      - jq
+      - unzip
+      - tar
+      - rsync
+      - bash-completion
+      - lsof
+      - tcpdump
+      - traceroute
+      - mtr-tiny
+      - dnsutils
+      - net-tools
+      - htop
+      - tmux
+    ubuntu24:
+      - vim
+      - nano
+      - wget
+      - jq
+      - unzip
+      - tar
+      - rsync
+      - bash-completion
+      - lsof
+      - tcpdump
+      - traceroute
+      - mtr-tiny
+      - dnsutils
+      - net-tools
+      - htop
+      - tmux
