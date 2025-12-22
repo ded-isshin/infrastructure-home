@@ -1,4 +1,4 @@
 admin_packages_debian12:
   pkg.installed:
     - pkgs:
-      {{ salt['pillar.get']('admin:packages:debian12') | json }}
+      {{ salt['pillar.get']('admin:packages:debian12', []) | json }}
