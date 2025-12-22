@@ -1,5 +1,5 @@
 dnf-plugins-core:
-  pkg.installed:
+  pkg.installed
 
 enable_crb:
   cmd.run:
