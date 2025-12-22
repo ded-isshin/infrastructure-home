@@ -1,0 +1,79 @@
+- name: Install SaltStack master (Rocky 9, onedir packages)
+  hosts: mgmt-salt-prod-01
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  tasks:
+    - name: Install Salt Project repository file
+      ansible.builtin.get_url:
+        url: "{{ salt_repo_file_url }}"
+        dest: /etc/yum.repos.d/salt.repo
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Clear repository metadata
+      ansible.builtin.command: "dnf clean expire-cache"
+      changed_when: false
+
+    - name: Install Salt packages
+      ansible.builtin.dnf:
+        name: "{{ salt_packages }}"
+        state: present
+
+    - name: Check salt-pip availability
+      ansible.builtin.command: salt-pip --version
+      changed_when: false
+
+    - name: Check required onedir Python packages
+      ansible.builtin.command: "salt-pip show {{ item }}"
+      register: salt_pip_show
+      changed_when: false
+      failed_when: false
+      loop: "{{ salt_onedir_pip_packages | default([]) }}"
+
+    - name: Install required onedir Python packages
+      ansible.builtin.command: "salt-pip install {{ item.item }}"
+      when: item.rc != 0
+      loop: "{{ salt_pip_show.results | default([]) }}"
+      notify: Restart salt-master
+
+    - name: Ensure salt state and pillar roots exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+      loop: "{{ (salt_master_file_roots_base | default(['/srv/salt'])) + (salt_master_pillar_roots_base | default(['/srv/pillar'])) }}"
+
+    - name: Configure salt-master (managed include)
+      ansible.builtin.template:
+        src: salt/master.d/10-ansible.conf.j2
+        dest: /etc/salt/master.d/10-ansible.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart salt-master
+
+    - name: Configure gitfs and git_pillar (managed include)
+      ansible.builtin.template:
+        src: salt/master.d/20-gitfs.conf.j2
+        dest: /etc/salt/master.d/20-gitfs.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart salt-master
+
+    - name: Enable and start salt-master
+      ansible.builtin.service:
+        name: salt-master
+        enabled: true
+        state: started
+
+  handlers:
+    - name: Restart salt-master
+      ansible.builtin.service:
+        name: salt-master
+        state: restarted

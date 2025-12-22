@@ -14,6 +14,19 @@ resource "proxmox_virtual_environment_download_file" "images" {
   checksum_algorithm = each.value.checksum_algorithm
 }
 
+# resource "proxmox_virtual_environment_file" "local_images" {
+#   for_each = local.local_images
+
+#   content_type       = "import"
+#   datastore_id       = "local"
+#   node_name          = var.node_name
+#   source_file {
+#     path = each.value.path
+#     file_name = each.value.file_name
+#     checksum = each.value.checksum
+#   }
+# }
+
 #
 # Cloud-init images for Proxmox block
 # https://pve.proxmox.com/pve-docs/pve-admin-guide.html#qm_cloud_init
@@ -97,7 +110,7 @@ resource "proxmox_virtual_environment_vm" "machines" {
     interface    = "scsi0"
     iothread     = true
     discard      = "on"
-    size         = 20
+    size         = try(each.value.root_disk_size_gb, var.root_disk_size_gb)
   }
 
   ########################################
@@ -167,8 +180,8 @@ resource "powerdns_record" "machines_a_records" {
   ttl  = local.dns_ttl
 
   records = [
-  proxmox_virtual_environment_vm.machines[each.key].ipv4_addresses[
-    index(proxmox_virtual_environment_vm.machines[each.key].network_interface_names, "eth0")
-  ][0]
+    proxmox_virtual_environment_vm.machines[each.key].ipv4_addresses[
+      index(proxmox_virtual_environment_vm.machines[each.key].network_interface_names, "eth0")
+    ][0]
   ]
 }

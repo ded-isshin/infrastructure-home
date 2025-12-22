@@ -1,0 +1,48 @@
+---
+#
+# Ansible managed
+#
+
+#
+# DNF / RPM-based (RHEL/Rocky)
+# Salt Project onedir packages (LTS recommended for production)
+# https://docs.saltproject.io/salt/install-guide/en/latest/topics/install-by-operating-system/linux-rpm.html
+#
+
+salt_repo_file_url: "https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.repo"
+
+# Pin to a point release (example from Salt Install Guide)
+salt_version: "3006.17"
+
+salt_minion_packages_rpm:
+  - "salt-minion-{{ salt_version }}"
+
+#
+# DEB-based (Debian/Ubuntu)
+# https://docs.saltproject.io/salt/install-guide/en/latest/topics/install-by-operating-system/linux-deb.html
+#
+
+salt_deb_keyring_dir: /etc/apt/keyrings
+salt_deb_keyring_path: /etc/apt/keyrings/salt-archive-keyring.pgp
+salt_deb_key_url: "https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public"
+salt_deb_sources_url: "https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.sources"
+salt_deb_sources_path: /etc/apt/sources.list.d/salt.sources
+
+# On DEB-based systems package names don't embed the version; keep it simple and
+# install the current package from Salt Project repo (you can pin later via
+# /etc/apt/preferences.d as per docs
+salt_minion_packages_deb:
+  - salt-minion
+
+#
+# Common
+#
+
+# If salt-minion is already installed and running, skip host setup
+salt_minion_skip_if_running: true
+
+#
+# salt-minion configuration (rendered to /etc/salt/minion.d/10-ansible.conf)
+#
+
+salt_minion_master: "mgmt-salt-prod-01.home.arpa"

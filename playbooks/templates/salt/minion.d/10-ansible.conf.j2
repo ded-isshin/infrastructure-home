@@ -1,0 +1,8 @@
+#
+# Ansible managed
+#
+
+master: {{ salt_minion_master }}
+id: {{ salt_minion_id | default(ansible_fqdn | default(inventory_hostname)) }}
+random_reauth_delay: 60
+log_level: "info"

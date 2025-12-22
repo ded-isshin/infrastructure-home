@@ -1,0 +1,130 @@
+- name: Install and configure Salt minions
+  hosts: group_tag_terraform
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  pre_tasks:
+    - name: Read service facts
+      ansible.builtin.service_facts:
+
+    - name: Decide whether to skip minion setup on this host
+      ansible.builtin.set_fact:
+        salt_minion_skip_host: >-
+          {{
+            (salt_minion_skip_if_running | default(true) | bool)
+            and
+            (
+              ('salt-minion.service' in ansible_facts.services)
+              and
+              (ansible_facts.services['salt-minion.service'].state == 'running')
+            )
+          }}
+
+  tasks:
+    - name: Skip host because salt-minion is already running
+      ansible.builtin.debug:
+        msg: "salt-minion is already running; skipping host setup"
+      when: salt_minion_skip_host | bool
+
+    - name: Install and configure salt-minion
+      when: not (salt_minion_skip_host | bool)
+      block:
+        - name: Install Salt Project repository file (RPM)
+          ansible.builtin.get_url:
+            url: "{{ salt_repo_file_url }}"
+            dest: /etc/yum.repos.d/salt.repo
+            owner: root
+            group: root
+            mode: "0644"
+          when: ansible_os_family == "RedHat"
+
+        - name: Clear repository metadata (RPM)
+          ansible.builtin.command: dnf clean expire-cache
+          changed_when: false
+          when: ansible_os_family == "RedHat"
+
+        - name: Ensure APT keyrings directory exists (DEB)
+          ansible.builtin.file:
+            path: "{{ salt_deb_keyring_dir }}"
+            state: directory
+            owner: root
+            group: root
+            mode: "0755"
+          when: ansible_os_family == "Debian"
+
+        - name: Install Salt Project apt key (DEB)
+          ansible.builtin.get_url:
+            url: "{{ salt_deb_key_url }}"
+            dest: "{{ salt_deb_keyring_path }}"
+            owner: root
+            group: root
+            mode: "0644"
+          when: ansible_os_family == "Debian"
+
+        - name: Install Salt Project apt sources file (DEB)
+          ansible.builtin.get_url:
+            url: "{{ salt_deb_sources_url }}"
+            dest: "{{ salt_deb_sources_path }}"
+            owner: root
+            group: root
+            mode: "0644"
+          when: ansible_os_family == "Debian"
+
+        - name: Update apt metadata (DEB)
+          ansible.builtin.apt:
+            update_cache: true
+          when: ansible_os_family == "Debian"
+
+        - name: Install Salt minion packages (RPM)
+          ansible.builtin.package:
+            name: "{{ salt_minion_packages_rpm }}"
+            state: present
+          when: ansible_os_family == "RedHat"
+
+        - name: Install Salt minion packages (DEB)
+          ansible.builtin.apt:
+            name: "{{ salt_minion_packages_deb }}"
+            state: present
+          when: ansible_os_family == "Debian"
+
+        - name: Ensure salt minion config include directory exists
+          ansible.builtin.file:
+            path: /etc/salt/minion.d
+            state: directory
+            owner: root
+            group: root
+            mode: "0755"
+
+        - name: Configure salt-minion (managed include)
+          ansible.builtin.template:
+            src: salt/minion.d/10-ansible.conf.j2
+            dest: /etc/salt/minion.d/10-ansible.conf
+            owner: root
+            group: root
+            mode: "0644"
+          notify: Restart salt-minion
+
+        - name: Enable and start salt-minion
+          ansible.builtin.service:
+            name: salt-minion
+            enabled: true
+            state: started
+
+    - name: Accept minion keys on the master (only for hosts in this run)
+      ansible.builtin.command: >-
+        salt-key -y -a {{
+          hostvars[item].salt_minion_id
+          | default(hostvars[item].ansible_fqdn | default(item))
+        }}
+      delegate_to: mgmt-salt-prod-01
+      run_once: true
+      changed_when: false
+      failed_when: false
+      loop: "{{ ansible_play_hosts | difference(['mgmt-salt-prod-01']) }}"
+
+  handlers:
+    - name: Restart salt-minion
+      ansible.builtin.service:
+        name: salt-minion
+        state: restarted
