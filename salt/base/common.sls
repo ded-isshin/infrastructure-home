@@ -1,4 +1,4 @@
 common_packages:
   pkg.installed:
     - pkgs:
-      {{ salt['pillar.get']('base:common_packages') | json }}
+      {{ salt['pillar.get']('common_packages', []) | json }}
