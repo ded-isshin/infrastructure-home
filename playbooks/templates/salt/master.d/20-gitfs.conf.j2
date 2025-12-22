@@ -17,3 +17,4 @@ ext_pillar:
   - git:
       - {{ salt_git_branch | default("main") }} {{ salt_git_repo_url }}:
           - root: {{ salt_git_pillar_root | default("pillar") }}
+          - env: base
