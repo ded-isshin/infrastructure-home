@@ -1,0 +1,18 @@
+#
+# Ansible managed
+#
+
+# Basic settings
+server={{ bitcoin_server | int }}
+datadir={{ bitcoin_data_dir }}
+
+# RPC
+rpcuser={{ bitcoin_rpcuser }}
+rpcpassword={{ bitcoin_rpcpassword }}
+
+# Indexing
+txindex={{ bitcoin_txindex | int }}
+
+# Performance
+dbcache={{ bitcoin_dbcache }}
+
