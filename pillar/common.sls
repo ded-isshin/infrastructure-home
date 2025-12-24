@@ -1,5 +1,5 @@
-common_packages:
-  - ca-certificates
-  - curl
-  - chrony
-  - qemu-guest-agent
+  common_packages:
+    - ca-certificates
+    - curl
+    - chrony
+    - qemu-guest-agent

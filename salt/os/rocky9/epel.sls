@@ -1,14 +1,17 @@
-dnf-plugins-core:
-  pkg.installed
+crb_repo_enabled:
+  ini.options_present:
+    - name: /etc/yum.repos.d/rocky.repo
+    - sections:
+        crb:
+          enabled: 1
 
-enable_crb:
+dnf_clean_all_after_repo_change:
   cmd.run:
-    - name: dnf -y config-manager --set-enabled crb
-    - unless: dnf repolist --enabled | awk '{print $1}' | grep -qx crb
-    - require:
-      - pkg: dnf-plugins-core
+    - name: dnf -y clean all
+    - onchanges:
+      - ini: crb_repo_enabled
 
 epel-release:
   pkg.installed:
     - require:
-      - cmd: enable_crb
+      - ini: crb_repo_enabled
