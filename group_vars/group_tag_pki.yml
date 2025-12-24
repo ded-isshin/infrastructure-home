@@ -23,12 +23,12 @@ storage_pools:
 
 #
 # robertdebock.bootstrap vars
-#  
+#
 bootstrap_become: true
 
 #
 # robertdebock.hashicorp vars
-#  
+#
 hashicorp_products:
   - name: vault
     type: oss
@@ -36,8 +36,8 @@ hashicorp_products:
 
 #
 # robertdebock.vault_configuration vars
-#  
-# Specify the location where TLS material should be placed. This is typically `/opt/vault/tls`.
+#
+# Specify the location where TLS material should be placed. This is typically `/opt/vault/tls`
 vault_configuration_tls_directory: "/var/lib/vault/tls"
 vault_configuration_ui: true
 vault_configuration_log_level: "info"
