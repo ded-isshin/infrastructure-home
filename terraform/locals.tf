@@ -82,7 +82,7 @@ locals {
     "pki-vault-prod-01" = {
       tags                   = ["terraform", "pki", "vault"]
       started                = true
-      protection             = false
+      protection             = true
       instance_type_provider = "aws"
       instance_type          = "c5.xlarge"
       disk_import_from       = proxmox_virtual_environment_download_file.images["release_20251123_rocky_9_qcow2"].id
@@ -102,7 +102,7 @@ locals {
     "mgmt-salt-prod-01" = {
       tags                   = ["terraform", "mgmt", "salt"]
       started                = true
-      protection             = false
+      protection             = true
       instance_type_provider = "aws"
       instance_type          = "c5.xlarge"
       disk_import_from       = proxmox_virtual_environment_download_file.images["release_20251123_rocky_9_qcow2"].id
@@ -111,6 +111,25 @@ locals {
       root_disk_size_gb      = 60
 
       extra_disks = []
+    }
+    "crypto-bitcoin-prod-01" = {
+      tags                   = ["terraform", "crypto", "bitcoin"]
+      started                = true
+      protection             = true
+      instance_type_provider = "aws"
+      instance_type          = "c5.large"
+      disk_import_from       = proxmox_virtual_environment_download_file.images["release_20251123_rocky_9_qcow2"].id
+      ip_config_ipv4_address = "dhcp"
+
+      extra_disks = [
+        {
+          datastore_id = "zfs-data"
+          interface    = "scsi1"
+          size         = 900
+          iothread     = true
+          discard      = "on"
+        }
+      ]
     }
   }
 

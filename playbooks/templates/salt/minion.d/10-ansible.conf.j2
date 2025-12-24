@@ -6,3 +6,16 @@ master: {{ salt_minion_master }}
 id: {{ salt_minion_id | default(ansible_fqdn | default(inventory_hostname)) }}
 random_reauth_delay: 60
 log_level: "info"
+
+# Auto-apply configuration after boot and periodically
+schedule:
+  highstate_after_boot:
+    function: state.highstate
+    run_on_start: True
+    seconds: 300
+    splay: 60
+
+  highstate_daily:
+    function: state.highstate
+    hours: 24
+    splay: 900

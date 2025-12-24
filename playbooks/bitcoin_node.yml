@@ -1,0 +1,110 @@
+- name: Install Bitcoin Core Node
+  hosts: crypto-bitcoin-prod-01
+  vars_files:
+    - ../vault.yml
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  pre_tasks:
+    - name: Ensure bitcoin group exists
+      ansible.builtin.group:
+        name: "{{ bitcoin_group }}"
+        state: present
+      tags: [storage, bitcoin]
+
+    - name: Ensure bitcoin user exists
+      ansible.builtin.user:
+        name: "{{ bitcoin_user }}"
+        group: "{{ bitcoin_group }}"
+        home: "{{ bitcoin_data_dir }}"
+        create_home: false
+        system: true
+        shell: /bin/false
+        state: present
+      tags: [storage, bitcoin]
+
+  roles:
+    - role: linux-system-roles.storage
+      tags: [storage]
+
+  tasks:
+    - name: Ensure required packages are installed
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - tar
+          - gzip
+        state: present
+      tags: [bitcoin]
+
+    - name: Download Bitcoin Core tarball
+      ansible.builtin.get_url:
+        url: "https://bitcoincore.org/bin/bitcoin-core-{{ bitcoin_core_version }}/bitcoin-{{ bitcoin_core_version }}-x86_64-linux-gnu.tar.gz"
+        dest: "/tmp/bitcoin-{{ bitcoin_core_version }}-x86_64-linux-gnu.tar.gz"
+        mode: "0644"
+        checksum: "{{ bitcoin_core_tarball_sha256 }}"
+      tags: [bitcoin]
+
+    - name: Extract Bitcoin Core to /opt
+      ansible.builtin.unarchive:
+        src: "/tmp/bitcoin-{{ bitcoin_core_version }}-x86_64-linux-gnu.tar.gz"
+        dest: /opt
+        remote_src: true
+        creates: "/opt/bitcoin-{{ bitcoin_core_version }}/bin/bitcoind"
+      tags: [bitcoin]
+
+    - name: Symlink bitcoind and bitcoin-cli into /usr/local/bin
+      ansible.builtin.file:
+        src: "/opt/bitcoin-{{ bitcoin_core_version }}/bin/{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
+        state: link
+        owner: root
+        group: root
+      loop:
+        - bitcoind
+        - bitcoin-cli
+      tags: [bitcoin]
+
+    - name: Ensure bitcoin data directory exists
+      ansible.builtin.file:
+        path: "{{ bitcoin_data_dir }}"
+        state: directory
+        owner: "{{ bitcoin_user }}"
+        group: "{{ bitcoin_group }}"
+        mode: "0750"
+      tags: [bitcoin]
+
+    - name: Configure Bitcoin Core
+      ansible.builtin.template:
+        src: bitcoin/bitcoin.conf.j2
+        dest: "{{ bitcoin_config_path }}"
+        owner: "{{ bitcoin_user }}"
+        group: "{{ bitcoin_group }}"
+        mode: "0600"
+      tags: [bitcoin]
+      notify: Restart bitcoind
+
+    - name: Install systemd unit for bitcoind
+      ansible.builtin.template:
+        src: bitcoin/bitcoind.service.j2
+        dest: /etc/systemd/system/bitcoind.service
+        owner: root
+        group: root
+        mode: "0644"
+      tags: [bitcoin]
+      notify: Restart bitcoind
+
+    - name: Enable and start bitcoind
+      ansible.builtin.systemd:
+        name: bitcoind.service
+        enabled: true
+        state: started
+        daemon_reload: true
+      tags: [bitcoin]
+
+  handlers:
+    - name: Restart bitcoind
+      ansible.builtin.systemd:
+        name: bitcoind.service
+        state: restarted
