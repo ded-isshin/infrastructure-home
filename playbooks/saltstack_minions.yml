@@ -1,5 +1,5 @@
 - name: Install and configure Salt minions
-  hosts: group_tag_terraform
+  hosts: all
   become: true
   gather_facts: true
   any_errors_fatal: true

@@ -1,5 +1,5 @@
 - name: Install PKI Vault with RAFT backend
-  hosts: group_tag_pki
+  hosts: pki-vault-prod-01
   become: true
   gather_facts: true
   any_errors_fatal: true

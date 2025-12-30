@@ -1,5 +1,5 @@
 - name: Install PowerDNS Authoritative Server with SQLite backend
-  hosts: group_tag_dns
+  hosts: dns-powerdns-prod-01
   vars_files:
     - ../vault.yml
   become: true

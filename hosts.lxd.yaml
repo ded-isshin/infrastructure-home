@@ -1,0 +1,13 @@
+plugin: community.general.lxd
+url: unix:/var/snap/lxd/common/lxd/unix.socket
+state: RUNNING
+type_filter: both
+prefered_instance_network_family: inet
+prefered_instance_network_interface: enp5s0
+groupby:
+  typeVM:
+    type: type
+    attribute: virtual-machine
+  typeContainer:
+    type: type
+    attribute: container
