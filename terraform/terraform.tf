@@ -1,14 +1,14 @@
 terraform {
   required_providers {
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "0.88.0"
+    lxd = {
+      source  = "terraform-lxd/lxd"
+      version = ">= 2.6.1"
     }
     powerdns = {
       source  = "pan-net/powerdns"
-      version = "1.5.0"
+      version = ">= 1.5.0"
     }
   }
 
-  required_version = ">= 1.14"
+  required_version = ">= 1.4"
 }

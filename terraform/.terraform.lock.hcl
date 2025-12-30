@@ -1,32 +1,9 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
-provider "registry.terraform.io/bpg/proxmox" {
-  version     = "0.88.0"
-  constraints = "0.88.0"
-  hashes = [
-    "h1:/6TMqwIfslKGvlaP+i8clyAkGReStS558CUV4wBigPQ=",
-    "zh:022749d9e02050da10e3a10729fddbff26a1eaaf4331261ef43dcd4a67420145",
-    "zh:126f26ddadb783c65a68df24ac576c3165db88797ced42e623e3e809cb82bc28",
-    "zh:186cd8053de91a1196d8c71b09b0de4e81bc69610980ccfc688d8807bbd52e15",
-    "zh:396fce81cf5188479a64540f5987741d31d3dc6d4009c6ccaf0d6a2631d04646",
-    "zh:57fd677f7b9aaec41cc4ce0d9dda90249526bd5316dd2d8eca16aa274703ed97",
-    "zh:87eae1d8a833ab0965055383ef0a4d1d6998eff0b955dd0fb6c6267a6af681f9",
-    "zh:8e9e690c8e464ff97ade1970d61350ba49c8e60a68c0973e5fdd0e13e7aeb8d4",
-    "zh:b3fcfc17cd6f979786463c436c8e404ef785d082907d1742a50fa028a2530dd6",
-    "zh:d55841596d465ac9119821fa622abddc02865a9d56335cbd32dccdc163b1ed1a",
-    "zh:de81c727cdc78178481680242f1dcdfad1a498803782bbe981b973e43f5b4013",
-    "zh:e685191155311b64407ebfc5f284466a9f0717b5d9c5dc43ca14aedcbf4f998d",
-    "zh:e6a94c893c2b24b8d7e418171b9d9492ae564ed541dd1038d7289fad13b3052f",
-    "zh:f26e0763dbe6a6b2195c94b44696f2110f7f55433dc142839be16b9697fa5597",
-    "zh:fa549bf7dac48bdd7edefd73e36e1167ba1861522406049f5ffd3feeff6fafc6",
-    "zh:fe7e38fe1c55d4c22482be89d8b47346c9a08e3ae6b33e60038a04a587a2c158",
-  ]
-}
-
 provider "registry.terraform.io/pan-net/powerdns" {
   version     = "1.5.0"
-  constraints = "1.5.0"
+  constraints = ">= 1.5.0"
   hashes = [
     "h1:bsz18KLloevlTZkXwZr8u0sFCZKcOYyts2RaWkV6YNc=",
     "zh:02d1a87c28635779f66d1dcf165b5f16530f809deb6c71c35c3e58d715a88bf4",
@@ -42,5 +19,27 @@ provider "registry.terraform.io/pan-net/powerdns" {
     "zh:d6e1069bb9d9f368e5d55a8bdf55de23636a586d698515f0075733499d6b9ccc",
     "zh:dd224d521af2f72bfdc3498c5ccd54b09844cfaa347b3008f61faad465cc9769",
     "zh:e02960d79ccfeeaea64c07aa1ad88cdd3688f49b670c9b607ea188283cd519d6",
+  ]
+}
+
+provider "registry.terraform.io/terraform-lxd/lxd" {
+  version     = "2.6.1"
+  constraints = ">= 2.6.1"
+  hashes = [
+    "h1:7Gqqj7/h4b5UnHnB1/rPLOsfV/UwRbWOIE9E96L0oic=",
+    "zh:0e81cf5219b90322d3f27b9d625a61e576e5d59f8a2c884ad1a0677233b05e51",
+    "zh:1df6d31ed7b39d3a1ebc158d1373071e83f24db4a02a9b4061bee649a2ff112e",
+    "zh:2b5c01c7db71cc62dca2bf2557b39dc4a513f718fc8893e3adf2f8d899e2ee5b",
+    "zh:30461a0e0b0cee09d92919710cbc1b6630fb76e88ea9bbea71abebe68f7a1a23",
+    "zh:307fa09c6945bf99dd72b737281c2241375d0dc616f40fe69c0289f57e0c41e5",
+    "zh:34f826ff781b912f487677b5025286ebfc074992a986c5a3cd141373e22a29ed",
+    "zh:4be480af634d43373fc81c761fa3596e57d6c612312390784aa75fa8581c770f",
+    "zh:4cf18db5528d63acc6900e3f269d68f4c5a5e7ef2f2e85c3048eb598de7064bc",
+    "zh:51409fe57567b2eb5b495d2fb8c9038cce71d930fca80eb1e9753444b4941ab0",
+    "zh:8fd9d4d08a554c4d26a15d1248accf6c0612345803530a592c8c96890af9ce7d",
+    "zh:b58a5c34e96cef0b4cef5bbc29058cc5ebef8d6a7165e33fb7b377076714f985",
+    "zh:cd6eb1110c978096685cbd882d455549867692d350d111e026731863402ff4bc",
+    "zh:e0b120445a2ddcbd08200c00b1e6c65cf26e5522c8fe849f0831acd2f1329a7d",
+    "zh:f8460092a22a9190b5506796bb0e0667eb773ddf28728b12d3939cf0e6c22c01",
   ]
 }

@@ -11,7 +11,7 @@ storage_pools:
     grow_to_fill: true
     volumes:
       - name: lv_bitcoin
-        size: "100%"
+        size: "98%" # https://github.com/linux-system-roles/storage/tree/1.19.1#:~:text=NOTE:%20The%20requested%20volume%20size%20may%20be%20reduced%20as%20necessary%20so%20the%20volume%20can%20fit%20in%20the%20available%20pool%20space%2C%20but%20only%20if%20the%20required%20reduction%20is%20not%20more%20than%202%%20of%20the%20requested%20volume%20size.
         fs_type: ext4
         mount_point: /var/lib/bitcoin
         mount_options: "defaults,noatime"
