@@ -63,17 +63,22 @@ locals {
       ipv4_gateway           = "192.168.0.1"
       extra_volumes          = []
     }
-    # "pki-vault-prod-01" = {
-    #   tags                   = ["terraform", "pki", "vault"]
-    #   instance_type_provider = "aws"
-    #   instance_type          = "c5.xlarge"
-    #   image                  = "rocky_9"
-    #   type                   = "virtual-machine"
-    #   ipv4_address           = "192.168.0.30/24"
-    #   ipv4_gateway           = "192.168.0.1"
-    #   root_disk_size_gb      = 60
-    #   extra_volumes          = []
-    # }
+    "pki-vault-prod-01" = {
+      tags                   = ["terraform", "pki", "vault"]
+      instance_type_provider = "aws"
+      instance_type          = "c5.xlarge"
+      image                  = "rocky_9"
+      type                   = "virtual-machine"
+      ipv4_address           = "192.168.0.30/24"
+      ipv4_gateway           = "192.168.0.1"
+      extra_volumes = [
+        {
+          pool    = "data-nvme-pool"
+          name    = "pki-vault-prod-01-vaultdata"
+          size_gb = 40
+        }
+      ]
+    }
     "mgmt-salt-prod-01" = {
       tags              = ["terraform", "mgmt", "salt"]
       instance_type     = "c5.xlarge"

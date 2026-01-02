@@ -12,7 +12,7 @@ storage_pools:
     grow_to_fill: true
     volumes:
       - name: lv_vault
-        size: "100%"
+        size: "98%" # https://github.com/linux-system-roles/storage/tree/1.19.1#:~:text=NOTE:%20The%20requested%20volume%20size%20may%20be%20reduced%20as%20necessary%20so%20the%20volume%20can%20fit%20in%20the%20available%20pool%20space%2C%20but%20only%20if%20the%20required%20reduction%20is%20not%20more%20than%202%%20of%20the%20requested%20volume%20size.
         fs_type: ext4
         mount_point: "/var/lib/vault"
         mount_options: "defaults,noatime"
@@ -35,9 +35,14 @@ hashicorp_products:
     version: "1.21.1"
 
 #
+# robertdebock.vault vars
+#
+vault_data_directory: "/var/lib/vault"
+vault_hardening_disable_swap: true
+
+#
 # robertdebock.vault_configuration vars
 #
-# Specify the location where TLS material should be placed. This is typically `/opt/vault/tls`
 vault_configuration_tls_directory: "/var/lib/vault/tls"
 vault_configuration_ui: true
 vault_configuration_log_level: "info"

@@ -27,11 +27,13 @@
       tags: [storage]
     - role: robertdebock.hashicorp
       tags: [vault]
+    - role: robertdebock.vault
+      tags: [vault]
     - role: robertdebock.vault_configuration
       tags: [vault]
 
 - name: Initialize and unseal PKI Vault (unseal keys -> ansible vault)
-  hosts: group_tag_pki
+  hosts: pki-vault-prod-01
   become: true
   gather_facts: true
   any_errors_fatal: true

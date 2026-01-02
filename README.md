@@ -4,7 +4,7 @@
 
 This repository contains Infrastructure as Code (IaC) for a home server environment
 
-- **Proxmox VE**: hypervisor for virtual machines
+- **LXD**: hypervisor for virtual machines and LXC
 - **Terraform**: provisions VMs in Proxmox and manages DNS
 - **cloud-init**: initial VM configuration on first boot
 - **Ansible**: bootstraps services
@@ -18,3 +18,4 @@ Best practices and architecture documentation
 - Google Cloud Architecture Center `https://cloud.google.com/architecture`
 - Microsoft Azure Architecture Center `https://learn.microsoft.com/en-us/azure/architecture/`
 - Oracle Cloud Infrastructure Architecture Center `https://docs.oracle.com/en/solutions/oci-best-practices/`
+- HashiCorp Well-Architected Framework `https://developer.hashicorp.com/well-architected-framework`
