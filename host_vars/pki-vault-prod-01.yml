@@ -1,4 +1,4 @@
-# Group vars for Hashicorp Vault
+# Host vars for Hashicorp Vault
 
 #
 # linux-system-roles.storage vars

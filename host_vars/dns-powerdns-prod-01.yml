@@ -1,4 +1,4 @@
-# Group vars for PowerDNS Server (SQLite backend)
+# Host vars for PowerDNS Server (SQLite backend)
 
 # Install PowerDNS from the official repository (Rocky/RHEL supported)
 pdns_install_repo: "{{ pdns_auth_powerdns_repo_50 }}"

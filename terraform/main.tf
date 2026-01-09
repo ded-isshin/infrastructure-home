@@ -44,7 +44,7 @@ resource "lxd_instance" "machines" {
             }
           ] : []
           nameservers = {
-            addresses = ["192.168.0.20", "192.168.0.1", "8.8.8.8"]
+            addresses = ["192.168.0.20", "147.45.43.80"] # From router
           }
         }
       }
@@ -60,9 +60,10 @@ resource "lxd_instance" "machines" {
     name = "root"
     type = "disk"
     properties = {
-      path = "/"
-      pool = var.default_storage_pool_name
-      size = format("%dGiB", try(each.value.root_disk_size_gb, var.default_root_disk_size_gb))
+      path            = "/"
+      "boot.priority" = 100
+      pool            = var.default_storage_pool_name
+      size            = format("%dGiB", try(each.value.root_disk_size_gb, var.default_root_disk_size_gb))
     }
   }
 
@@ -77,17 +78,6 @@ resource "lxd_instance" "machines" {
       }
     }
   }
-
-  device {
-    name = "eth0"
-    type = "nic"
-    properties = {
-      network = var.default_lxd_network_name
-      name    = "eth0"
-    }
-  }
-
-
 }
 
 resource "powerdns_zone" "zones" {

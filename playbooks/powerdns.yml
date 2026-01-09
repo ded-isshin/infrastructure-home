@@ -6,5 +6,5 @@
   gather_facts: true
   any_errors_fatal: true
   roles:
-    - role: romeroalx.pdns-ansible # The role https://github.com/PowerDNS/pdns-ansible is not updating
+    - role: ded-isshin.pdns-ansible # The role https://github.com/PowerDNS/pdns-ansible is not updating
       tags: [pdns]

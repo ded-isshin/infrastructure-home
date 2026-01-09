@@ -1,24 +1,41 @@
-- name: Install SaltStack master (Rocky 9, onedir packages)
+- name: Install SaltStack master (Ubuntu 24, onedir packages)
   hosts: mgmt-salt-prod-01
   become: true
   gather_facts: true
   any_errors_fatal: true
 
   tasks:
+    - name: Install Salt Project archive keyring
+      ansible.builtin.get_url:
+        url: "https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public"
+        dest: /etc/apt/keyrings/salt-archive-keyring.pgp
+        owner: root
+        group: root
+        mode: "0644"
+
     - name: Install Salt Project repository file
       ansible.builtin.get_url:
         url: "{{ salt_repo_file_url }}"
-        dest: /etc/yum.repos.d/salt.repo
+        dest: /etc/apt/sources.list.d/salt.sources
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy salt-pin-1001 to /etc/apt/preferences.d/
+      ansible.builtin.copy:
+        src: files/salt/salt-pin-1001
+        dest: /etc/apt/preferences.d/salt-pin-1001
         owner: root
         group: root
         mode: "0644"
 
     - name: Clear repository metadata
-      ansible.builtin.command: "dnf clean expire-cache"
+      ansible.builtin.apt:
+        update_cache: true
       changed_when: false
 
     - name: Install Salt packages
-      ansible.builtin.dnf:
+      ansible.builtin.package:
         name: "{{ salt_packages }}"
         state: present
 

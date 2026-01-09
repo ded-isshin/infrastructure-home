@@ -57,7 +57,7 @@ locals {
       tags                   = ["terraform", "dns"]
       instance_type_provider = "aws"
       instance_type          = "c5.large"
-      image                  = "rocky_9"
+      image                  = "ubuntu_24"
       type                   = "virtual-machine"
       ipv4_address           = "192.168.0.20/24"
       ipv4_gateway           = "192.168.0.1"
@@ -67,13 +67,13 @@ locals {
       tags                   = ["terraform", "pki", "vault"]
       instance_type_provider = "aws"
       instance_type          = "c5.xlarge"
-      image                  = "rocky_9"
+      image                  = "ubuntu_24"
       type                   = "virtual-machine"
       ipv4_address           = "192.168.0.30/24"
       ipv4_gateway           = "192.168.0.1"
       extra_volumes = [
         {
-          pool    = "data-nvme-pool"
+          pool    = "fast-nvme-pool"
           name    = "pki-vault-prod-01-vaultdata"
           size_gb = 40
         }
@@ -82,25 +82,42 @@ locals {
     "mgmt-salt-prod-01" = {
       tags              = ["terraform", "mgmt", "salt"]
       instance_type     = "c5.xlarge"
-      image             = "rocky_9"
+      image             = "ubuntu_24"
       type              = "virtual-machine"
       ipv4_address      = "192.168.0.35/24"
       ipv4_gateway      = "192.168.0.1"
       root_disk_size_gb = 60
       extra_volumes     = []
     }
-    "crypto-bitcoin-prod-01" = {
-      tags          = ["terraform", "crypto", "bitcoin"]
-      instance_type = "c5.large"
-      image         = "rocky_9"
-      type          = "virtual-machine"
-      ipv4_address      = "192.168.0.50/24"
-      ipv4_gateway      = "192.168.0.1"
+    "git-gitlab-prod-01" = {
+      tags                   = ["terraform", "gitlab"]
+      instance_type_provider = "aws"
+      instance_type          = "c5.2xlarge"
+      image                  = "ubuntu_24"
+      type                   = "virtual-machine"
+      ipv4_address           = "192.168.0.40/24"
+      ipv4_gateway           = "192.168.0.1"
+      root_disk_size_gb      = 100
       extra_volumes = [
         {
-          pool    = "data-nvme-pool"
+          pool    = "fast-nvme-pool"
+          name    = "git-gitlab-prod-01-gitlabdata"
+          size_gb = 50
+        }
+      ]
+    }
+    "crypto-bitcoin-prod-01" = {
+      tags          = ["terraform", "crypto", "bitcoin"]
+      instance_type = "m4.large"
+      image         = "ubuntu_24"
+      type          = "virtual-machine"
+      ipv4_address  = "192.168.0.50/24"
+      ipv4_gateway  = "192.168.0.1"
+      extra_volumes = [
+        {
+          pool    = "fast-nvme-pool"
           name    = "crypto-bitcoin-prod-01-btcdata"
-          size_gb = 850
+          size_gb = 1000
         }
       ]
     }
