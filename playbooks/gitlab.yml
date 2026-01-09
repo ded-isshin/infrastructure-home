@@ -1,0 +1,34 @@
+- name: Install GitLab Omnibus Node
+  hosts: git-gitlab-prod-01
+  vars_files:
+    - ../vault.yml
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  
+  pre_tasks:
+    - name: Ensure git group exists
+      ansible.builtin.group:
+        name: "git"
+        state: present
+      tags: [storage, gitlab]
+
+    - name: Ensure git user exists
+      ansible.builtin.user:
+        name: "git"
+        group: "git"
+        create_home: false
+        system: true
+        shell: /bin/false
+        state: present
+      tags: [storage, gitlab]
+
+  roles:
+    - role: robertdebock.bootstrap
+      tags: [gitlab]
+    - role: robertdebock.storage
+      tags: [storage]
+    - role: robertdebock.gitlab
+      tags: [gitlab]
+    # - role: robertdebock.gitlab_runner
+    #   tags: [gitlab]
