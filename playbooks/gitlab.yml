@@ -5,7 +5,6 @@
   become: true
   gather_facts: true
   any_errors_fatal: true
-  
   pre_tasks:
     - name: Ensure git group exists
       ansible.builtin.group:

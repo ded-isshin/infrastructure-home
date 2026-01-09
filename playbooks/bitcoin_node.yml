@@ -5,7 +5,6 @@
   become: true
   gather_facts: true
   any_errors_fatal: true
-
   pre_tasks:
     - name: Ensure bitcoin group exists
       ansible.builtin.group:
@@ -25,7 +24,9 @@
       tags: [storage, bitcoin]
 
   roles:
-    - role: linux-system-roles.storage
+    - role: robertdebock.bootstrap
+      tags: [bitcoin]
+    - role: robertdebock.storage
       tags: [storage]
 
   tasks:
