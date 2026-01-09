@@ -5,7 +5,7 @@
 This repository contains Infrastructure as Code (IaC) for a home server environment
 
 - **LXD**: hypervisor for virtual machines and LXC
-- **Terraform**: provisions VMs in Proxmox and manages DNS
+- **Terraform**: provisions VMs in LXD and manages DNS
 - **cloud-init**: initial VM configuration on first boot
 - **Ansible**: bootstraps services
 - **SaltStack**: brings VM and service state in line with the desired configuration
