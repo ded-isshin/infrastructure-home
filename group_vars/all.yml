@@ -12,7 +12,7 @@
 salt_repo_file_url: "https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.repo"
 
 # Pin to a point release (example from Salt Install Guide)
-salt_version: "3006.17"
+salt_version: "3006.18"
 
 salt_minion_packages_rpm:
   - "salt-minion-{{ salt_version }}"
@@ -32,7 +32,7 @@ salt_deb_sources_path: /etc/apt/sources.list.d/salt.sources
 # install the current package from Salt Project repo (you can pin later via
 # /etc/apt/preferences.d as per docs
 salt_minion_packages_deb:
-  - salt-minion
+  - "salt-minion={{ salt_version }}"
 
 #
 # Common

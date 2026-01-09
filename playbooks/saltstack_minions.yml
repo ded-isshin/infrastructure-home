@@ -53,10 +53,10 @@
             mode: "0755"
           when: ansible_os_family == "Debian"
 
-        - name: Install Salt Project apt key (DEB)
+        - name: Install Salt Project archive keyring
           ansible.builtin.get_url:
-            url: "{{ salt_deb_key_url }}"
-            dest: "{{ salt_deb_keyring_path }}"
+            url: "https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public"
+            dest: /etc/apt/keyrings/salt-archive-keyring.pgp
             owner: root
             group: root
             mode: "0644"
@@ -66,6 +66,15 @@
           ansible.builtin.get_url:
             url: "{{ salt_deb_sources_url }}"
             dest: "{{ salt_deb_sources_path }}"
+            owner: root
+            group: root
+            mode: "0644"
+          when: ansible_os_family == "Debian"
+
+        - name: Copy salt-pin-1001 to /etc/apt/preferences.d/
+          ansible.builtin.copy:
+            src: files/salt/salt-pin-1001
+            dest: /etc/apt/preferences.d/salt-pin-1001
             owner: root
             group: root
             mode: "0644"
@@ -110,6 +119,11 @@
             name: salt-minion
             enabled: true
             state: started
+
+        - name: Restart salt-minion
+          ansible.builtin.service:
+            name: salt-minion
+            state: restarted
 
     - name: Accept minion keys on the master (only for hosts in this run)
       ansible.builtin.command: >-

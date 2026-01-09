@@ -6,10 +6,12 @@ collections:
 roles:
   - name: linux-system-roles.storage
     version: 1.19.1
-  - name: romeroalx.pdns-ansible
-    src: ssh://git@github.com/romeroalx/pdns-ansible.git
+  - name: ded-isshin.pdns-ansible
+    src: ssh://git@github.com/ded-isshin/pdns-ansible.git
     scm: git
     version: master
+  - name: robertdebock.storage
+    version: 6.0.4
   - name: robertdebock.bootstrap
     version: 7.1.6
   - name: robertdebock.core_dependencies
@@ -22,6 +24,10 @@ roles:
     version: 5.2.2
   - name: robertdebock.vault_initialize
     version: 1.0.4
+  - name: robertdebock.gitlab
+    version: 1.14.1
+  - name: robertdebock.gitlab_runner
+    version: 6.0.1
   # - name: cloudalchemy.coredns
   #   version: 2.0.0
   # - name: igor_nikiforov.etcd

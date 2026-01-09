@@ -1,24 +1,36 @@
 # Host vars for Bitcoin Core Node
 
 #
-# linux-system-roles.storage vars
+# robertdebock.bootstrap vars
 #
-storage_pools:
+bootstrap_become: true
+
+#
+# robertdebock.storage vars
+#
+storage_partitions:
+  - name: /dev/sdb
+    number: 1
+    part_end: 100%
+    label: gpt
+storage_volumegroups:
   - name: vg_bitcoin
-    disks:
-      - sdb
-    type: lvm
-    grow_to_fill: true
-    volumes:
-      - name: lv_bitcoin
-        size: "98%" # https://github.com/linux-system-roles/storage/tree/1.19.1#:~:text=NOTE:%20The%20requested%20volume%20size%20may%20be%20reduced%20as%20necessary%20so%20the%20volume%20can%20fit%20in%20the%20available%20pool%20space%2C%20but%20only%20if%20the%20required%20reduction%20is%20not%20more%20than%202%%20of%20the%20requested%20volume%20size.
-        fs_type: ext4
-        mount_point: /var/lib/bitcoin
-        mount_options: "defaults,noatime"
-        mount_user: bitcoin
-        mount_group: bitcoin
-        mount_mode: "0750"
-        state: present
+    devices:
+      - /dev/sdb1
+storage_volumes:
+  - name: lv_bitcoin
+    vg: vg_bitcoin
+    size: "+100%FREE"
+storage_filesystems:
+  - name: /dev/vg_bitcoin/lv_bitcoin
+    fstype: ext4
+storage_mounts:
+  - name: /var/lib/bitcoin
+    src: /dev/vg_bitcoin/lv_bitcoin
+    owner: bitcoin
+    group: bitcoin
+    mode: "0750"
+    opts: "defaults,noatime"
 
 #
 # Bitcoin Core configuration
