@@ -1,0 +1,63 @@
+# Host vars for GitLab Omnibus Node
+
+#
+# robertdebock.storage vars
+#
+storage_partitions:
+  - name: /dev/sdb
+    number: 1
+    part_end: 100%
+    label: gpt
+storage_volumegroups:
+  - name: vg_gitlab
+    devices:
+      - /dev/sdb1
+storage_volumes:
+  - name: lv_gitlab
+    vg: vg_gitlab
+    size: "+100%FREE"
+storage_filesystems:
+  - name: /dev/vg_gitlab/lv_gitlab
+    fstype: ext4
+storage_mounts:
+  - name: /var/opt/gitlab
+    src: /dev/vg_gitlab/lv_gitlab
+    owner: git
+    group: git
+    mode: "0700"
+    opts: "defaults,noatime"
+
+#
+# robertdebock.bootstrap vars
+#
+bootstrap_become: true
+
+#
+# robertdebock.gitlab vars
+#
+gitlab_version: "18.7.0"
+gitlab_edition: "community"
+gitlab_rails_time_zone: UTC
+# LDAP settings
+gitlab_rails_ldap_enabled: false
+gitlab_rails_prevent_ldap_sign_in: false
+# Backup settings
+gitlab_rails_manage_backup_path: true
+gitlab_rails_backup_path: /var/opt/gitlab/backups
+gitlab_rails_backup_gitaly_backup_path: /opt/gitlab/embedded/bin/gitaly-backup
+gitlab_rails_backup_archive_permissions: "0644"
+gitlab_rails_backup_pg_schema: public
+gitlab_rails_backup_keep_time: 604800
+# SMTP settings
+gitlab_rails_smtp_enable: false
+# E-mail settings
+gitlab_rails_gitlab_email_enabled: false
+# Settings for git storage
+git_data_dirs:
+  default:
+    path: "/var/opt/gitlab/git-data"
+# Database settings
+gitlab_rails_db_password: "{{ vault_gitlab_rails_db_password }}"
+# SSL settings
+gitlab_letsencrypt: false
+gitlab_external_url: "http://git-gitlab-prod-01.home.arpa"
