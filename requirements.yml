@@ -28,6 +28,10 @@ roles:
     version: 1.14.1
   - name: robertdebock.gitlab_runner
     version: 6.0.1
+  - name: nginxinc.nginx
+    version: 0.25.0
+  - name: nginxinc.nginx_config
+    version: 0.7.1
   # - name: cloudalchemy.coredns
   #   version: 2.0.0
   # - name: igor_nikiforov.etcd
