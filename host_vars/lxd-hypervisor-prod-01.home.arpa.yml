@@ -1,0 +1,49 @@
+# Host vars for LXD hypervisor node
+
+#
+# nginxinc.nginx vars
+#
+nginx_branch: stable
+nginx_static_modules: ['http_ssl_module', 'stream']
+nginx_logrotate_conf_enable: true
+
+#
+# nginxinc.nginx_config vars
+#
+nginx_config_main_template_enable: true
+nginx_config_main_template:
+  template_file: nginx.conf.j2
+  deployment_location: /etc/nginx/nginx.conf
+  config:
+    main:
+      user:
+        username: nginx
+      worker_cpu_affinity:
+        auto: true
+      daemon: true
+      working_directory: /etc/nginx
+    http:
+      include:
+        - /etc/nginx/conf.d/*.conf
+        - /etc/nginx/conf.d/backend/*.conf
+    stream:
+      include:
+        - /etc/nginx/conf.d/streams/*.conf
+
+nginx_config_stream_template_enable: true
+nginx_config_stream_template:
+  - filename: stream/default.conf.j2
+    deployment_location: /etc/nginx/conf.d/streams/stream_btc.conf
+    config:
+      upstreams:
+        - name: btc_backend
+          servers:
+            - address: crypto-bitcoin-prod-01.home.arpa:8333
+      servers:
+        - core:
+            listen:
+              - address: 0.0.0.0
+                port: 8333
+                ssl: false
+          proxy:
+            pass: btc_backend

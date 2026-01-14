@@ -1,0 +1,11 @@
+- name: Install Nginx as external reverse proxy
+  hosts: lxd-hypervisor-prod-01.home.arpa
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  roles:
+    - role: nginxinc.nginx
+      tags: [nginx]
+    - role: nginxinc.nginx_config
+      tags: [nginx]
